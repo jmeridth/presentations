@@ -1,0 +1,62 @@
+COMPILE_TARGET = "release"
+require "BuildUtils.rb"
+require 'fileutils'
+
+RESULTS_DIR = "results"
+DIST_DIR = "dist"
+BUILD_NUMBER = "0.0.0.1"
+PRODUCT = "HelloUser"
+COPYRIGHT = 'Copyright 2008-2009 Jason Meridth. All rights reserved.';
+CLR_VERSION = "v3.5"
+
+props = { :archive => "build" }
+
+desc "**Default**, compiles and runs tests"
+task :default => [:clean, :compile, :unit_test, :create_zip]
+
+desc "Prepares the working directory for a new build"
+task :clean do
+  puts "Running clean task"
+  Dir.mkdir props[:archive] unless File.exists?(props[:archive])
+end
+
+desc "Compiles the app"
+task :compile => [:clean] do
+  MSBuildRunner.compile :compilemode => COMPILE_TARGET, :solutionfile => 'HelloUser.sln', :clrversion => CLR_VERSION
+  outDir = "HelloUser/bin/#{COMPILE_TARGET}"
+      
+  Dir.glob(File.join(outDir, "*.{dll,pdb,xml}")) do |file| 
+    copy(file, props[:archive]) if File.file?(file)
+  end
+end
+
+desc "Runs unit tests"
+task :unit_test => [:compile] do
+  runner = NUnitRunner.new :compilemode => COMPILE_TARGET, :platform => 'x86'
+  runner.executeTests ['HelloUserLibraryTests']  
+end
+
+desc "Create a binary zip"
+task :create_zip do
+  puts "Creating binary zip"
+
+  Dir.mkdir DIST_DIR unless File.exists? DIST_DIR
+  
+  create_zip("#{DIST_DIR}/hellouser-binary-#{BUILD_NUMBER}.zip", 'build/')
+end
+
+desc "Displays a list of tasks"
+task :help do
+  taskHash = Hash[*(`rake -T`.split(/\n/).collect { |line| line.match(/rake (\S+)\s+\#\s(.+)/).to_a }.collect { |line| [line[1], line[2]] }).flatten] 
+ 
+  indent = "                          "
+  
+  puts "rake #{indent}#Runs the 'default' task"
+  
+  taskHash.each_pair do |key, value|
+    if key.nil?  
+      next
+    end
+    puts "rake #{key}#{indent.slice(0, indent.length - key.length)}##{value}"
+  end
+end
