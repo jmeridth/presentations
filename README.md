@@ -7,7 +7,7 @@ My Presentations
 | Date | Topic |
 | ---- | ----- |
 | 10/24/2024 | [Open Source Security and Community](open_source_security_and_community/open_source_security_and_community2024.pdf) |
-| 11/12/2024 | [Untangling the Threads: Understanding Argo Workflows with Workflow Tracing](untangling_the_threads/untangling_the_threads2024.pdf) |
+| 11/12/2024 | [Untangling the Threads: Understanding Argo Workflows with Workflow Tracing](untangling_the_threads/UntanglingTheThreads.pdf) |
 
 ## 2023
 
