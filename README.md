@@ -1,4 +1,4 @@
-JM (Jason Meridth) ([@jmeridth](https://github.com/jmeridth))
+Jason Meridth ([@jmeridth](https://github.com/jmeridth))
 
 My Presentations
 
